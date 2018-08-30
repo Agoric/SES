@@ -13,6 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import {insist} from './insist';
+
 /**
  * Is allegenNum a number in the contiguous range of exactly and
  * unambiguously representable natural numbers (non-negative integers)?
@@ -25,13 +27,9 @@
  * >Allen Wirfs-Brock's suggested phrasing</a> on es-discuss.
  */
 export function Nat(allegedNum) {
-  // TODO simplify by using Number.isSafeInteger
-  if (typeof allegedNum !== 'number') {
-    throw new RangeError('not a number');
-  }
-  if (allegedNum !== allegedNum) { throw new RangeError('NaN not natural'); }
-  if (allegedNum < 0)            { throw new RangeError('negative'); }
-  if (allegedNum % 1 !== 0)      { throw new RangeError('not integral'); }
-  if (allegedNum > Number.MAX_SAFE_INTEGER) { throw new RangeError('too big'); }
+  insist(Number.isSafeInteger(allegedNum),
+         `${allegedNum} must be a safe integer`, RangeError);
+  insist(allegedNum >= 0,
+         `${allegedNum} must be positive`, RangeError);
   return allegedNum;
 }
