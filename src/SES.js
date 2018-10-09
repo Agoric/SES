@@ -14,7 +14,7 @@
 
 import { createSESWithRealmConstructor } from './bundle/index.js';
 import { creatorStrings } from './stringifiedBundle';
-import Realm from '../proposal-realms/shim/src/realm.js';
+import Realm from '../node_modules/ecma-proposal-realms/shim/src/realm.js';
 
 const SES = createSESWithRealmConstructor(creatorStrings, Realm);
 export default SES;

@@ -15,7 +15,9 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "tape": "^4.9.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ecma-proposal-realms": "git+https://github.com/Agoric/proposal-realms.git"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Agoric/SES.git"
