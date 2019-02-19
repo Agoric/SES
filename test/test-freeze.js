@@ -53,3 +53,29 @@ test('SESRealm anonymous intrinsics are frozen', t => {
   );
   t.end();
 });
+
+test.skip('prototypes are checked correctly', t => {
+  const s = SES.makeSESRootRealm({consoleMode: 'allow', errorStackMode: 'allow'});
+  function makeObjects() {
+    const a = {a: 1};
+    const b = {b: 1, __proto__: a};
+    const c = {c: 1, __proto__: b};
+    return { a, b, c };
+  }
+  // TODO: one failure mode (of a harden() that 
+  function doHarden(b, c) {
+    const harden = require('@agoric/harden');
+    try {
+      harden(b);
+      // this fails because 'a' is not yet frozen, but it might still put 'b'
+      // into the frozenSet
+    } catch (e) {
+    }
+    // this is supposed to fail. If 'b' was erroneously put into the
+    // frozenSet, it would appear to succeed.
+    harden(c);
+  }
+  const objs = s.evaluate(`(${makeObjects})`)();
+  // TODO: use doHarden.
+  t.end();
+});
