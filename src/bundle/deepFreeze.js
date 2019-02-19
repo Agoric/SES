@@ -35,6 +35,7 @@ export default function deepFreeze(root) {
   function innerDeepFreeze(node) {
     // Objects that we have frozen in this round.
     const freezingSet = new Set();
+    const prototypes = new Set();
 
     // If val is something we should be freezing but aren't yet,
     // add it to freezingSet.
@@ -71,8 +72,11 @@ export default function deepFreeze(root) {
       // get stable/immutable outbound links before a Proxy has a chance to do
       // something sneaky.
       const proto = getPrototypeOf(obj);
+      if (proto !== null && !prototypes.has(proto)) {
+        prototypes.add(proto);
+      }
+
       const descs = getOwnPropertyDescriptors(obj);
-      enqueue(proto);
       ownKeys(descs).forEach(name => {
         // todo uncurried form
         // todo: getOwnPropertyDescriptors is guaranteed to return well-formed
@@ -106,8 +110,21 @@ export default function deepFreeze(root) {
       freezingSet.forEach(frozenSet.add, frozenSet);
     }
 
+    function checkPrototypes() {
+      //console.log(`prototypes are`, prototypes);
+      prototypes.forEach(p => {
+        if (!(frozenSet.has(p) || freezingSet.has(p))) {
+          // all reachable properties have already been frozen by this point
+          throw new TypeError(
+            `prototype ${p} is not already in the frozenSet`,
+          );
+        }
+      });
+    }
+
     enqueue(node);
     dequeue();
+    checkPrototypes();
     commit();
   }
 
