@@ -35,11 +35,12 @@ export default function deepFreeze(root) {
   function innerDeepFreeze(node) {
     // Objects that we have frozen in this round.
     const freezingSet = new Set();
-    const prototypes = new Set();
+    const prototypes = new Map();
+    const paths = new WeakMap();
 
     // If val is something we should be freezing but aren't yet,
     // add it to freezingSet.
-    function enqueue(val) {
+    function enqueue(val, path) {
       if (Object(val) !== val) {
         // ignore primitives
         return;
@@ -55,6 +56,7 @@ export default function deepFreeze(root) {
         return;
       }
       freezingSet.add(val); // todo use uncurried form
+      paths.set(val, path);
     }
 
     function doFreeze(obj) {
@@ -72,12 +74,15 @@ export default function deepFreeze(root) {
       // get stable/immutable outbound links before a Proxy has a chance to do
       // something sneaky.
       const proto = getPrototypeOf(obj);
+      const path = paths.get(obj) || 'unknown';
       if (proto !== null && !prototypes.has(proto)) {
-        prototypes.add(proto);
+        prototypes.set(proto, path);
+        paths.set(proto, `${path}.__proto__`);
       }
 
       const descs = getOwnPropertyDescriptors(obj);
       ownKeys(descs).forEach(name => {
+        const pathname = `${path}.${String(name)}`;
         // todo uncurried form
         // todo: getOwnPropertyDescriptors is guaranteed to return well-formed
         // descriptors, but they still inherit from Object.prototype. If
@@ -89,10 +94,10 @@ export default function deepFreeze(root) {
         const desc = descs[name];
         if ('value' in desc) {
           // todo uncurried form
-          enqueue(desc.value);
+          enqueue(desc.value, `${pathname}`);
         } else {
-          enqueue(desc.get);
-          enqueue(desc.set);
+          enqueue(desc.get, `${pathname}(get)`);
+          enqueue(desc.set, `${pathname}(set)`);
         }
       });
     }
@@ -112,17 +117,17 @@ export default function deepFreeze(root) {
 
     function checkPrototypes() {
       //console.log(`prototypes are`, prototypes);
-      prototypes.forEach(p => {
+      prototypes.forEach((path, p) => {
         if (!(frozenSet.has(p) || freezingSet.has(p))) {
           // all reachable properties have already been frozen by this point
           throw new TypeError(
-            `prototype ${p} is not already in the frozenSet`,
+            `prototype ${p} of ${path} is not already in the frozenSet`,
           );
         }
       });
     }
 
-    enqueue(node);
+    enqueue(node, 'root');
     dequeue();
     checkPrototypes();
     commit();
