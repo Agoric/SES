@@ -19,6 +19,11 @@ jobs:
           paths:
             - ./node_modules
       - run:
+          name: Update Realms Submodule
+          command: |
+          git pull |
+          git submodule update --init --recursive
+      - run:
           name: Lint
           command: npm run lint-check
       - run:
