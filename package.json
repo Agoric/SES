@@ -12,8 +12,8 @@
     "build": "git submodule update --init --recursive && node scripts/build-intermediate.js && rollup -c",
     "pretty-fix": "prettier --write 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}'",
     "pretty-check": "prettier --check 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}'",
-    "lint-fix": "eslint --fix 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}'",
-    "lint-check": "eslint 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}'"
+    "lint-fix": "eslint --fix 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}' 'rollup.config.js'",
+    "lint-check": "eslint 'src/**/*.{js,jsx}' 'test/**/*.{js,jsx}' 'rollup.config.js'"
   },
   "devDependencies": {
     "@agoric/nat": "^2.0.0",
