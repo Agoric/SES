@@ -18,9 +18,6 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - run:
-          name: Git Pull Realms Submodule
-          command: git pull
       - run: 
           name: Git Submodule Update
           command: git submodule update --init --recursive
