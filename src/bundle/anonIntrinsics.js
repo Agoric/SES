@@ -103,8 +103,6 @@ export default function getAnonIntrinsics(global) {
 
   function* aStrictGenerator() {} // eslint-disable-line no-empty-function
   const Generator = getProto(aStrictGenerator);
-  async function* aStrictAsyncGenerator() {} // eslint-disable-line no-empty-function
-  const AsyncGenerator = getProto(aStrictAsyncGenerator);
   async function aStrictAsyncFunction() {} // eslint-disable-line no-empty-function
   const AsyncFunctionPrototype = getProto(aStrictAsyncFunction);
 
@@ -120,10 +118,28 @@ export default function getAnonIntrinsics(global) {
     ['Number.prototype', Number.prototype, 1],
     ['String.prototype', String.prototype, 'x'],
     ['%Generator%', Generator, aStrictGenerator],
-    ['%AsyncGenerator%', AsyncGenerator, aStrictAsyncGenerator],
     ['%AsyncFunction%', AsyncFunctionPrototype, aStrictAsyncFunction],
   ];
   const undeniables = {};
+
+  let haveAsyncGenerators = false;
+  let AsyncGenerator;
+  let aStrictAsyncGenerator;
+  try {
+    aStrictAsyncGenerator = eval('(async function* () {})');
+    haveAsyncGenerators = true;
+  } catch (e) {
+    if (!(e instanceof SyntaxError)) {
+      throw e;
+    }
+    // a SyntaxError from that eval means this engine doesn't support async
+    // generators, e.g. Node 9 or older
+  }
+  if (haveAsyncGenerators) {
+    AsyncGenerator = getProto(aStrictAsyncGenerator);
+    undeniableTuples.push(
+      ['%AsyncGenerator%', AsyncGenerator, aStrictAsyncGenerator]);
+  }
 
   undeniableTuples.forEach(tuple => {
     const name = tuple[0];
@@ -220,26 +236,28 @@ export default function getAnonIntrinsics(global) {
       throw new Error('Unexpected Generator.prototype.__proto__');
     }
 
-    // Get the ES6 %AsyncGeneratorFunction% intrinsic, if present.
-    if (getProto(AsyncGenerator) !== Function.prototype) {
-      throw new Error('AsyncGenerator.__proto__ was not Function.prototype');
-    }
-    const AsyncGeneratorFunction = AsyncGenerator.constructor;
-    if (getProto(AsyncGeneratorFunction) !== Function.prototype.constructor) {
-      throw new Error(
-        'AsyncGeneratorFunction.__proto__ was not Function.prototype.constructor',
-      );
-    }
-    result.AsyncGeneratorFunction = AsyncGeneratorFunction;
-    const AsyncGeneratorPrototype = AsyncGenerator.prototype;
-    result.AsyncIteratorPrototype = getProto(AsyncGeneratorPrototype);
-    // it appears that the only way to get an AsyncIteratorPrototype is
-    // through this getProto() process, so there's nothing to check it
-    // against
-    if (getProto(result.AsyncIteratorPrototype) !== Object.prototype) {
-      throw new Error(
-        'AsyncIteratorPrototype.__proto__ was not Object.prototype',
-      );
+    if (haveAsyncGenerators) {
+      // Get the ES6 %AsyncGeneratorFunction% intrinsic, if present.
+      if (getProto(AsyncGenerator) !== Function.prototype) {
+        throw new Error('AsyncGenerator.__proto__ was not Function.prototype');
+      }
+      const AsyncGeneratorFunction = AsyncGenerator.constructor;
+      if (getProto(AsyncGeneratorFunction) !== Function.prototype.constructor) {
+        throw new Error(
+          'AsyncGeneratorFunction.__proto__ was not Function.prototype.constructor',
+        );
+      }
+      result.AsyncGeneratorFunction = AsyncGeneratorFunction;
+      const AsyncGeneratorPrototype = AsyncGenerator.prototype;
+      result.AsyncIteratorPrototype = getProto(AsyncGeneratorPrototype);
+      // it appears that the only way to get an AsyncIteratorPrototype is
+      // through this getProto() process, so there's nothing to check it
+      // against
+      if (getProto(result.AsyncIteratorPrototype) !== Object.prototype) {
+        throw new Error(
+          'AsyncIteratorPrototype.__proto__ was not Object.prototype',
+        );
+      }
     }
 
     // Get the ES6 %AsyncFunction% intrinsic, if present.

@@ -26,10 +26,21 @@ test('SESRealm anonymous intrinsics are frozen', t => {
     () => s.evaluate('(async function() {}).constructor.a = 10;'),
     TypeError,
   );
-  t.throws(
-    () => s.evaluate('(async function*() {}).constructor.a = 10;'),
-    TypeError,
-  );
+  let hasAsyncGenerator = false;
+  try {
+    s.evaluate('async function* dummy() {}');
+    hasAsyncGenerator = true;
+  } catch (e) {
+    if (!(e instanceof SyntaxError)) {
+      throw e;
+    }
+  }
+  if (hasAsyncGenerator) {
+    t.throws(
+      () => s.evaluate('(async function*() {}).constructor.a = 10;'),
+      TypeError,
+    );
+  }
   t.throws(() => s.evaluate('(function*() {}).constructor.a = 10;'), TypeError);
   t.throws(
     () => s.evaluate('[][Symbol.iterator]().constructor.a = 10;'),
