@@ -58,7 +58,7 @@ workflows:
       - build-node-9
       - build-node-10
       - build-node-11
-      - success
+      - success:
         requires:
           - build-node-10
           - build-node-11
