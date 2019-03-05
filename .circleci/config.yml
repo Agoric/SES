@@ -62,3 +62,5 @@ workflows:
     requires:
       - build-node-10
       - build-node-11
+    jobs:
+      - success
