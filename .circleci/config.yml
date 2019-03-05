@@ -3,26 +3,6 @@ jobs:
   build-node-7:
     docker:
       - image: circleci/node:7
-    steps:
-      <<: *build_steps
-  build-node-8:
-    docker:
-      - image: circleci/node:8
-    steps:
-      <<: *build_steps
-  build-node-9:
-    docker:
-      - image: circleci/node:9
-    steps:
-      <<: *build_steps
-  build-node-10:
-    docker:
-      - image: circleci/node:10
-    steps:
-      <<: *build_steps
-  build-node-11:
-    docker:
-      - image: circleci/node:11
     steps: &build_steps
       - checkout # special step to check out source code to working directory
       - run:
@@ -47,6 +27,26 @@ jobs:
       - run:
           name: Test
           command: npm test
+  build-node-8:
+    docker:
+      - image: circleci/node:8
+    steps:
+      <<: *build_steps
+  build-node-9:
+    docker:
+      - image: circleci/node:9
+    steps:
+      <<: *build_steps
+  build-node-10:
+    docker:
+      - image: circleci/node:10
+    steps:
+      <<: *build_steps
+  build-node-11:
+    docker:
+      - image: circleci/node:11
+    steps:
+      <<: *build_steps
 
 workflows:
   version: 2
