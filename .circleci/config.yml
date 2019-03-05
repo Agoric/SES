@@ -1,9 +1,9 @@
 version: 2.0
 jobs:
-  build-node-7:
+  build-node-7: &default
     docker:
       - image: circleci/node:7
-    steps: &build_steps
+    steps:
       - checkout # special step to check out source code to working directory
       - run:
           name: Update npm
@@ -28,25 +28,21 @@ jobs:
           name: Test
           command: npm test
   build-node-8:
+    <<: *default
     docker:
       - image: circleci/node:8
-    steps:
-      <<: *build_steps
   build-node-9:
+    <<: *default
     docker:
       - image: circleci/node:9
-    steps:
-      <<: *build_steps
   build-node-10:
+    <<: *default
     docker:
       - image: circleci/node:10
-    steps:
-      <<: *build_steps
   build-node-11:
+    <<: *default
     docker:
       - image: circleci/node:11
-    steps:
-      <<: *build_steps
 
 workflows:
   version: 2
