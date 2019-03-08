@@ -1,6 +1,6 @@
 version: 2.0
 jobs:
-  build-node-7: &default
+  build-node-11: &default
     docker:
       - image: circleci/node:7
     steps:
@@ -27,38 +27,30 @@ jobs:
       - run:
           name: Test
           command: npm test
-  build-node-8:
-    <<: *default
-    docker:
-      - image: circleci/node:8
-  build-node-9:
-    <<: *default
-    docker:
-      - image: circleci/node:9
   build-node-10:
     <<: *default
     docker:
-      - image: circleci/node:10
-  build-node-11:
-    <<: *default
-    docker:
-      - image: circleci/node:11
-  success:
-    steps:
-      - run:
-          name: Success
-          command: echo success
+      - image: circleci/node:8
+  # build-node-9:
+  #   <<: *default
+  #   docker:
+  #     - image: circleci/node:9
+  # build-node-8:
+  #   <<: *default
+  #   docker:
+  #     - image: circleci/node:10
+  # build-node-7:
+  #   <<: *default
+  #   docker:
+  #     - image: circleci/node:11
+
 
 workflows:
   version: 2
   test-all-versions:
     jobs:
-      - build-node-7
-      - build-node-8
-      - build-node-9
+      # - build-node-7
+      # - build-node-8
+      # - build-node-9
       - build-node-10
       - build-node-11
-      - success:
-        requires:
-          - build-node-10
-          - build-node-11
