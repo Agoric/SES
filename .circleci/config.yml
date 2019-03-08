@@ -43,11 +43,7 @@ jobs:
     <<: *default
     docker:
       - image: circleci/node:11
-  success:
-    steps:
-      - run:
-          name: Success
-          command: echo success
+
 
 workflows:
   version: 2
@@ -58,7 +54,3 @@ workflows:
       - build-node-9
       - build-node-10
       - build-node-11
-      - success:
-        requires:
-          - build-node-10
-          - build-node-11
