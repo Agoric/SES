@@ -47,12 +47,15 @@ jobs:
 
 workflows:
   version: 2
-  test-supported-versions:
+  test-all-versions:
     jobs:
+      - build-node-7: &old-node
+          filters: 
+            branches:
+              only: /^old-node-.*/
+      - build-node-8:
+          <<: *old-node
+      - build-node-9:
+          <<: *old-node
       - build-node-10
       - build-node-11
-  test-unsupported-versions:
-    jobs:
-      - build-node-7
-      - build-node-8
-      - build-node-9
