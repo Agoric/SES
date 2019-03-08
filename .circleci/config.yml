@@ -47,10 +47,12 @@ jobs:
 
 workflows:
   version: 2
-  test-all-versions:
+  test-supported-versions:
+    jobs:
+      - build-node-10
+      - build-node-11
+  test-unsupported-versions:
     jobs:
       - build-node-7
       - build-node-8
       - build-node-9
-      - build-node-10
-      - build-node-11
