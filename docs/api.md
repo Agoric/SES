@@ -75,8 +75,8 @@ function makeConsole() {
   }
 }
 
-const newConsole = s.evaluate(`(${makeConsole})`, {consoleEndowment: console});
-s.evaluate('console.log(4)', { console: newConsole() });
+const newConsole = s.evaluate(`(${makeConsole}())`, {consoleEndowment: console});
+s.evaluate('console.log(4)', { console: newConsole });
 ```
 
 Wrapping endowments like this is critical for security, because the simple approach would reveal an outer-realm object to the confined code, which it could use to escape confinement:
@@ -87,7 +87,7 @@ function evil() {
   outerObject.__proto__.toString = obj => 'haha';
 }
 
-s.evaluate(`(${evil})`, { consoleEndowment: console })();
+s.evaluate(`(${evil}())`, { consoleEndowment: console });
 (()=>{}).toString(); // prints 'haha'
 ```
 
