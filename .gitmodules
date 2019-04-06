@@ -1,3 +1,0 @@
-[submodule "proposal-realms"]
-	path = proposal-realms
-	url = https://github.com/tc39/proposal-realms.git

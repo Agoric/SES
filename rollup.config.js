@@ -13,7 +13,7 @@ export default [
         format: 'cjs',
       },
     ],
-    external: ['@agoric/make-hardener'],
+    external: ['@agoric/make-hardener', 'realms-shim'],
   },
   {
     input: 'src/index.js',
@@ -21,11 +21,15 @@ export default [
       file: 'dist/ses.umd.js',
       format: 'umd',
       name: 'SES',
+      globals: {
+        'realms-shim': 'Realm',
+      },
     },
     plugins: [
       resolve({
         only: ['@agoric/make-hardener'],
       }),
     ],
+    external: ['realms-shim'],
   },
 ];

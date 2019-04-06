@@ -7,9 +7,10 @@
   "browser": "dist/ses.umd.js",
   "scripts": {
     "test": "node scripts/build-intermediate.js && tape -r esm test/**/*.js",
+    "debug": "node --inspect-brk=9229 -r esm test/test-console.js",
     "just-test": "tape -r esm test/**/*.js",
     "build-intermediate": "node scripts/build-intermediate.js",
-    "build": "git submodule update --init --recursive && node scripts/build-intermediate.js && rollup -c",
+    "build": "node scripts/build-intermediate.js && rollup -c",
     "lint-fix": "eslint --fix '**/*.{js,jsx}'",
     "lint-check": "eslint '**/*.{js,jsx}'"
   },
@@ -29,7 +30,8 @@
   },
   "dependencies": {
     "@agoric/make-hardener": "^0.0.4",
-    "esm": "^3.2.5"
+    "esm": "^3.2.5",
+    "realms-shim": "file:../realms-shim-1.0.0.tgz"
   },
   "keywords": [
     "confinement",
