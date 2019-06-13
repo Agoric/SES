@@ -28,7 +28,9 @@
     "tape": "^4.9.2"
   },
   "dependencies": {
+    "@agoric/babel-parser": "^7.4.5-infixBang",
     "@agoric/make-hardener": "^0.0.4",
+    "@babel/generator": "^7.4.4",
     "esm": "^3.2.5"
   },
   "keywords": [

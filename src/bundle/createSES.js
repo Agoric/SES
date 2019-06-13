@@ -24,6 +24,7 @@ import getAllPrimordials from './getAllPrimordials';
 import whitelist from './whitelist';
 import makeConsole from './make-console';
 import makeMakeRequire from './make-require';
+import makeRewriteEvaluator from './makeRewriteEvaluator';
 
 export function createSESWithRealmConstructor(creatorStrings, Realm) {
   function makeSESRootRealm(options) {
@@ -86,6 +87,17 @@ export function createSESWithRealmConstructor(creatorStrings, Realm) {
     shims.push(removeProp);
 
     const r = Realm.makeRootRealm({ shims });
+
+    // Maybe rewrite sources befor evaluating.
+    const { infixBangResolver, rewriteModules } = options;
+    if (infixBangResolver || rewriteModules) {
+      const { evaluate } = r;
+      const baseEvaluate = (...args) => Reflect.apply(evaluate, r, args);
+      r.evaluate = makeRewriteEvaluator(baseEvaluate, {
+        infixBangResolver,
+        rewriteModules,
+      });
+    }
 
     // Build a harden() with an empty fringe. It will be populated later when
     // we call harden(allIntrinsics).
