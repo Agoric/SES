@@ -19,7 +19,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "@agoric/babel-parser": "^7.4.5-infixBang.1",
+    "@babel/generator": "^7.4.4",
+    "@babel/traverse": "^7.4.5"
+  },
   "devDependencies": {
     "browserify": "^16.2.3",
     "esm": "^3.2.11",
