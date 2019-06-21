@@ -85,7 +85,8 @@ export function createSESWithRealmConstructor(creatorStrings, Realm) {
                (${removeProperties})(this, ${JSON.stringify(wl)})`;
     shims.push(removeProp);
 
-    const r = Realm.makeRootRealm({ shims });
+    const { infixBangResolver } = options;
+    const r = Realm.makeRootRealm({ shims, infixBangResolver });
 
     // Build a harden() with an empty fringe. It will be populated later when
     // we call harden(allIntrinsics).
