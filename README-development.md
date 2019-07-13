@@ -8,16 +8,16 @@
 ** to get signed tags, start with `npm config set sign-git-tag true`
 * `npm run build`
 * `npm publish`
-* `npm version prerelease --preid=dev`
+* `npm version prerelease --preid=dev --no-git-tag-version`
 * `git push`
 
 ## Versioning
 
-While between releases, we use a version of "X.Y.Z-dev", where "X.Y.(Z-1)"
+While between releases, we use a version of "X.Y.Z-dev.*", where "X.Y.(Z-1)"
 was the previous release tag. This helps avoid confusion if/when people work
-from a git checkout, so bug reports to not make it look like they were using
+from a git checkout, so bug reports do not make it look like they were using
 the previous tagged release.
 
 To achieve this, after doing a release, we run `npm version prerelease
---preid=dev`, and commit, to modify the `package.json` and
-`package-lock.json` with the new in-between version string.
+--preid=dev --no-git-tag-version` to modify the `package.json` and
+`package-lock.json` with the new in-between version string and commit.
