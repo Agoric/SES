@@ -864,4 +864,76 @@ export default {
     Nat: j,
     def: j,
   },
+
+  // List the properties which should have the override mistake
+  // repaired by creating accessors.  See makeRepairDataProperties.js.
+  //
+  // For this repair whitelist, "all" means repair all members of the
+  // specified object.
+  //
+  // true means repair just that member
+  //
+  // anything else means don't repair
+  repairDataProperties: {
+    anonIntrinsics: {
+      GeneratorFunction: {
+        prototype: 'all',
+      },
+      AsyncFunction: {
+        prototype: 'all',
+      },
+      AsyncGeneratorFunction: {
+        prototype: 'all',
+      },
+
+      IteratorPrototype: 'all',
+
+      // a.ArrayIteratorPrototype,
+      TypedArray: {
+        prototype: 'all',
+      },
+    },
+
+    global: {
+      Object: {
+        prototype: 'all',
+      },
+      Array: {
+        prototype: 'all',
+      },
+
+      // g.Boolean.prototype,
+      // g.Date.prototype,
+      // g.Number.prototype,
+      // g.String.prototype,
+      // g.RegExp.prototype,
+
+      Function: {
+        prototype: 'all',
+      },
+
+      // g.DataView.prototype,
+
+      // g.Int8Array.prototype,
+      // g.Int16Array.prototype,
+      // g.Int32Array.prototype,
+      // g.Uint8Array.prototype,
+      // g.Uint16Array.prototype,
+      // g.Uint32Array.prototype,
+
+      Error: {
+        prototype: 'all',
+      },
+      // g.EvalError.prototype,
+      // g.RangeError.prototype,
+      // g.ReferenceError.prototype,
+      // g.SyntaxError.prototype,
+      // g.TypeError.prototype,
+      // g.URIError.prototype,
+
+      Promise: {
+        prototype: 'all',
+      },
+    },
+  },
 };

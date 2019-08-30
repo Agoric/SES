@@ -143,7 +143,7 @@ You probably want a Compartment instead, like:
       anonIntrinsics,
     );
 
-    repairDataProperties(allIntrinsics);
+    repairDataProperties(allIntrinsics, wl.repairDataProperties);
     harden(allIntrinsics);
 
     // build the makeRequire helper, glue it to the new Realm

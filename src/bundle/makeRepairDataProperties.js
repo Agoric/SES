@@ -77,70 +77,52 @@ export default function makeRepairDataProperties() {
     }
   }
 
+  // Return true if our caller should repair the property corresponding to this child object.
+  function repairAccordingToWhitelist(obj, wl) {
+    if (wl === true) {
+      // Do repair this item.
+      return true;
+    }
+
+    // Our whitelist is either '*' or a sublist.  We need
+    // an object with properties to continue.
+    if (!obj) {
+      return false;
+    }
+
+    const descs = getOwnPropertyDescriptors(obj);
+    if (!descs) {
+      return false;
+    }
+
+    // We're going to do the repair right here.
+    if (wl === 'all') {
+      // Repair all our immediate children.
+      ownKeys(obj).forEach(prop => {
+        enableDerivedOverride(obj, prop, descs[prop]);
+      });
+    } else if (Object(wl) === wl) {
+      ownKeys(wl).forEach(prop => {
+        // Repair only whitelisted properties.
+        if (repairAccordingToWhitelist(obj[prop], wl[prop])) {
+          enableDerivedOverride(obj, prop, descs[prop]);
+        }
+      });
+    }
+
+    return false;
+  }
+
   /**
    * These properties are subject to the override mistake
    * and must be converted before freezing.
    */
-  function repairDataProperties(intrinsics) {
+  function repairDataProperties(intrinsics, whitelist) {
     const { global: g, anonIntrinsics: a } = intrinsics;
+    const { global: gwl, anonIntrinsics: awl } = whitelist;
 
-    const toBeRepaired = [
-      g.Object.prototype,
-      g.Array.prototype,
-      // g.Boolean.prototype,
-      // g.Date.prototype,
-      // g.Number.prototype,
-      // g.String.prototype,
-      // g.RegExp.prototype,
-
-      g.Function.prototype,
-      a.GeneratorFunction.prototype,
-      a.AsyncFunction.prototype,
-      a.AsyncGeneratorFunction.prototype,
-
-      a.IteratorPrototype,
-      // a.ArrayIteratorPrototype,
-
-      // g.DataView.prototype,
-
-      a.TypedArray.prototype,
-      // g.Int8Array.prototype,
-      // g.Int16Array.prototype,
-      // g.Int32Array.prototype,
-      // g.Uint8Array.prototype,
-      // g.Uint16Array.prototype,
-      // g.Uint32Array.prototype,
-
-      g.Error.prototype,
-      // g.EvalError.prototype,
-      // g.RangeError.prototype,
-      // g.ReferenceError.prototype,
-      // g.SyntaxError.prototype,
-      // g.TypeError.prototype,
-      // g.URIError.prototype,
-    ];
-
-    // Promise may be removed from the whitelist
-    // TODO: the toBeRepaired list should be prepared
-    // externally and provided to repairDataProperties
-    const PromisePrototype = g.Promise && g.Promise.prototype;
-    if (PromisePrototype) {
-      toBeRepaired.push(PromisePrototype);
-    }
-
-    // repair each entry
-    toBeRepaired.forEach(obj => {
-      if (!obj) {
-        return;
-      }
-      const descs = getOwnPropertyDescriptors(obj);
-      if (!descs) {
-        return;
-      }
-      ownKeys(obj).forEach(prop =>
-        enableDerivedOverride(obj, prop, descs[prop]),
-      );
-    });
+    repairAccordingToWhitelist(g, gwl);
+    repairAccordingToWhitelist(a, awl);
   }
 
   return repairDataProperties;
