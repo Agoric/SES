@@ -6,12 +6,10 @@
   "module": "dist/ses.esm.js",
   "browser": "dist/ses.umd.js",
   "scripts": {
-    "test": "node scripts/build-intermediate.js && tape -r esm test/**/*.js",
-    "just-test": "tape -r esm test/**/*.js",
-    "build-intermediate": "node scripts/build-intermediate.js",
-    "build": "git submodule update --init --recursive && node scripts/build-intermediate.js && rollup -c",
+    "lint": "eslint '**/*.{js,jsx}'",
     "lint-fix": "eslint --fix '**/*.{js,jsx}'",
-    "lint-check": "eslint '**/*.{js,jsx}'"
+    "test": "tape -r esm 'test/**/*.js'",
+    "build": "git submodule update --init --recursive && rollup -c"
   },
   "devDependencies": {
     "@agoric/nat": "^2.0.0",
@@ -22,6 +20,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.13.0",
+    "esm": "^3.2.25",
     "prettier": "^1.17.1",
     "rollup": "^1.1.0",
     "rollup-plugin-node-resolve": "^4.0.0",
@@ -29,7 +28,7 @@
   },
   "dependencies": {
     "@agoric/make-hardener": "^0.0.6",
-    "esm": "^3.2.25"
+    "rollup-plugin-terser": "^5.1.2"
   },
   "keywords": [
     "confinement",

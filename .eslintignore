@@ -1,9 +1,6 @@
-# Realms Shim
-/realms-shim
+/evaluator-shim
 
 /dist/
-/src/stringifiedBundle
-/src/old/
 /demo/
 /scripts/
 /.misc/

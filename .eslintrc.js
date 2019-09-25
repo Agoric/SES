@@ -7,7 +7,7 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'function-paren-newline': 'off',
     'arrow-parens': 'off',
-    strict: 'off',
+    'strict': 'off',
     'no-console': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'no-return-assign': 'off',

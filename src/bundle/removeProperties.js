@@ -1,5 +1,3 @@
-/* global getAnonIntrinsics */
-
 // Copyright (C) 2011 Google Inc.
 // Copyright (C) 2018 Agoric
 //
@@ -15,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { getAnonIntrinsics } from './anonIntrinsics.js';
+import getAnonIntrinsics from './anonIntrinsics';
 
 export default function removeProperties(global, whitelist) {
   // walk global object, test against whitelist, delete

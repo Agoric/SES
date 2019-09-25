@@ -12,9 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {
-  createSESWithRealmConstructor,
-  createSESInThisRealm,
-} from './createSES';
+export function allowed(option) {
+  return option === 'allow';
+}
 
-export { createSESWithRealmConstructor, createSESInThisRealm };
+export function objectCloneDeep(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export function arrayCloneShallow(arr) {
+  // shallow copy into a new array object
+  return arr.slice(0);
+}
+
+export function objectFilter(obj, filter) {
+  if (typeof filter !== 'function') {
+    throw new TypeError('not a function');
+  }
+  const result = {};
+  // Copy properties and symbols.
+  Reflect.ownKeys(obj).forEach(key => {
+    if (filter(key)) {
+      result[key] = obj[key];
+    }
+  });
+  return result;
+}

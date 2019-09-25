@@ -18,7 +18,15 @@
  */
 
 // todo: this file should be moved out to a separate repo and npm module.
-export function repairFunctionConstructors() {
+export default function repairFunctionConstructors() {
+  try {
+    // Verify that the method is not callable.
+    (0, Function.prototype.constructor)('return 1');
+  } catch (ignore) {
+    // Throws, no need to patch.
+    return;
+  }
+
   const { defineProperties, getPrototypeOf, setPrototypeOf } = Object;
 
   /**
@@ -33,8 +41,8 @@ export function repairFunctionConstructors() {
   function repairFunction(name, declaration) {
     let FunctionInstance;
     try {
-      // eslint-disable-next-line no-new-func
-      FunctionInstance = (0,eval)(declaration);
+      // eslint-disable-next-line no-eval
+      FunctionInstance = (0, eval)(declaration);
     } catch (e) {
       if (e instanceof SyntaxError) {
         // Prevent failure on platforms where async and/or generators
@@ -48,6 +56,7 @@ export function repairFunctionConstructors() {
 
     // Prevents the evaluation of source when calling constructor on the
     // prototype of functions.
+    // eslint-disable-next-line func-names
     const TamedFunction = function() {
       throw new TypeError('Not available');
     };
@@ -67,13 +76,13 @@ export function repairFunctionConstructors() {
     // This line replaces the original constructor in the prototype chain
     // with the tamed one. No copy of the original is peserved.
     defineProperties(FunctionPrototype, {
-      constructor: { value: TamedFunction }
+      constructor: { value: TamedFunction },
     });
 
     // This line sets the tamed constructor's prototype data property to
     // the original one.
     defineProperties(TamedFunction, {
-      prototype: { value: FunctionPrototype }
+      prototype: { value: FunctionPrototype },
     });
 
     if (TamedFunction !== Function.prototype.constructor) {
