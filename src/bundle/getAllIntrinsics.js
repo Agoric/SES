@@ -1,4 +1,4 @@
-export default function getAllPrimordials(namedIntrinsics, anonIntrinsics) {
+export default function getAllIntrinsics(namedIntrinsics, anonIntrinsics) {
   'use strict';
 
   const root = {

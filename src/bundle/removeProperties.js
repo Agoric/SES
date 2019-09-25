@@ -15,11 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/* This is evaluated in an environment in which getAnonIntrinsics() is
-   already defined (by prepending the definition of getAnonIntrinsics to the
-   stringified removeProperties()), hence we don't use the following
-   import */
-// import { getAnonIntrinsics } from './anonIntrinsics.js';
+import { getAnonIntrinsics } from './anonIntrinsics.js';
 
 export default function removeProperties(global, whitelist) {
   // walk global object, test against whitelist, delete
