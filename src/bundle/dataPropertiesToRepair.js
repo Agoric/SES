@@ -91,6 +91,7 @@ export default {
         constructor: t, // set by "fast-json-patch"
         message: t,
         name: t, // set by "precond"
+        toString: t, // set by "bluebird"
       },
     },
 
