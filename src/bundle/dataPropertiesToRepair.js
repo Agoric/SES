@@ -94,7 +94,7 @@ export default {
         toString: t, // set by "bluebird"
       },
     },
-    
+
     TypeError: {
       prototype: {
         constructor: t, // set by "readable-stream"
